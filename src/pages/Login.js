@@ -1,14 +1,23 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 function Login() {
   const [form, setForm] = useState({
-    email: sessionStorage.getItem('tempEmail') || '',
-    password: sessionStorage.getItem('tempPassword') || '',
+    email: '',
+    password: '',
   });
   const [error, setError] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const tempEmail = sessionStorage.getItem('tempEmail');
+    const tempPassword = sessionStorage.getItem('tempPassword');
+
+    if (tempEmail && tempPassword) {
+      setForm({ email: tempEmail, password: tempPassword });
+    }
+  }, []);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -19,14 +28,13 @@ function Login() {
     setError('');
 
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/login', form);
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/login`, form);
       const { token, user } = res.data;
 
       localStorage.setItem('token', token);
       localStorage.setItem('userRole', user.role);
       window.dispatchEvent(new Event('storage'));
 
-      // Clear temporary login info after success
       sessionStorage.removeItem('tempEmail');
       sessionStorage.removeItem('tempPassword');
 
@@ -35,10 +43,10 @@ function Login() {
       } else if (user.role === 'vendor') {
         navigate('/vendor');
       } else {
-        setError('Invalid role');
+        setError('Invalid user role');
       }
     } catch (err) {
-      setError('Login failed. New user? Please register first.');
+      setError(err.response?.data?.message || 'Login failed. New user? Please register first.');
     }
   };
 

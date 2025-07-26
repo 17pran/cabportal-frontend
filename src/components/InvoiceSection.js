@@ -40,7 +40,7 @@ function InvoiceSection({ invoices }) {
                   <td className="py-2 px-4">
                     <button
                       className="text-blue-600 underline hover:text-blue-800 text-sm"
-                      onClick={() => window.print()} // You can enhance this to download PDF later
+                      onClick={() => window.print()} 
                     >
                       Download
                     </button>

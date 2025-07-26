@@ -1,4 +1,3 @@
-// frontend/src/pages/CompanyDashboard.js
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
@@ -19,11 +18,12 @@ function CompanyDashboard() {
   const [bookings, setBookings] = useState([]);
 
   const token = localStorage.getItem('token');
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/bookings', {
+        const res = await axios.get(`${BACKEND_URL}/api/bookings`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setBookings(res.data);
@@ -32,13 +32,13 @@ function CompanyDashboard() {
       }
     };
 
-    fetchBookings();
-  }, [token]);
+    if (token) fetchBookings();
+  }, [token, BACKEND_URL]);
 
   const updateBookingStatus = async (id, newStatus) => {
     try {
       await axios.put(
-        `http://localhost:5000/api/bookings/${id}/status`,
+        `${BACKEND_URL}/api/bookings/${id}/status`,
         { status: newStatus },
         { headers: { Authorization: `Bearer ${token}` } }
       );

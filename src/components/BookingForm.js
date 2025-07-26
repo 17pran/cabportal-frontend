@@ -34,6 +34,7 @@ function BookingForm() {
 
     try {
       const token = localStorage.getItem('token');
+await axios.post('https://cabportal-backend.onrender.com/api/bookings', payload);
 
       const res = await axios.post('http://localhost:5000/api/bookings', payload, {
         headers: {

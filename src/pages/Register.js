@@ -1,4 +1,3 @@
-// frontend/src/pages/Register.js
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -22,10 +21,11 @@ function Register() {
     setError('');
 
     try {
-      await axios.post('http://localhost:5000/api/auth/register', form);
+      await axios.post('https://cabportal-backend.onrender.com/api/auth/register', form);
 
-      // ✅ Redirect to login (no saving to localStorage)
-      console.log('✅ Registered. Redirecting to login...');
+      sessionStorage.setItem('tempEmail', form.email);
+      sessionStorage.setItem('tempPassword', form.password);
+
       navigate('/login');
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed');
