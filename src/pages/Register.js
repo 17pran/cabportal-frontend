@@ -23,7 +23,7 @@ function Register() {
       localStorage.setItem('userEmail', user.email);
       window.dispatchEvent(new Event('storage'));
 
-      navigate(user.role === 'company' ? '/company' : '/vendor');
+window.location.href = user.role === "company" ? "/company" : "/vendor";
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed');
     }
