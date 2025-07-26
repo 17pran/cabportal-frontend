@@ -21,6 +21,7 @@ function Login() {
 
       localStorage.setItem('token', token);
       localStorage.setItem('userRole', user.role);
+      localStorage.setItem('userEmail', user.email);
       window.dispatchEvent(new Event('storage'));
 
       navigate(user.role === 'company' ? '/company' : '/vendor');
@@ -30,21 +31,15 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-blue-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <div className="bg-white rounded-xl shadow-xl p-8 max-w-md w-full">
-        <h2 className="text-3xl font-bold text-blue-700 mb-4 text-center">Login</h2>
-        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-
+        <h2 className="text-2xl font-bold text-blue-700 mb-6 text-center">Login</h2>
+        {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
         <form onSubmit={handleSubmit} className="space-y-4">
-          <input type="email" name="email" value={form.email} onChange={handleChange} placeholder="Email" className="w-full px-4 py-2 border rounded-md" required />
-          <input type="password" name="password" value={form.password} onChange={handleChange} placeholder="Password" className="w-full px-4 py-2 border rounded-md" required />
-          <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">Login</button>
+          <input type="email" name="email" placeholder="Email" value={form.email} onChange={handleChange} required className="w-full px-4 py-2 border rounded-md" />
+          <input type="password" name="password" placeholder="Password" value={form.password} onChange={handleChange} required className="w-full px-4 py-2 border rounded-md" />
+          <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition">Login</button>
         </form>
-
-        <p className="mt-4 text-center text-sm text-gray-600">
-          Don’t have an account?{' '}
-          <a href="/register" className="text-blue-600 hover:underline">Register</a>
-        </p>
       </div>
     </div>
   );
