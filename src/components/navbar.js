@@ -8,11 +8,17 @@ function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [role, setRole] = useState('');
 
-  useEffect(() => {
+  const syncAuth = () => {
     const token = localStorage.getItem('token');
     const userRole = localStorage.getItem('userRole');
     setIsLoggedIn(!!token);
     setRole(userRole || '');
+  };
+
+  useEffect(() => {
+    syncAuth();
+    window.addEventListener('storage', syncAuth);
+    return () => window.removeEventListener('storage', syncAuth);
   }, [location.pathname]);
 
   const handleLogout = () => {

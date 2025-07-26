@@ -1,7 +1,7 @@
 // src/App.js
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import Navbar from './components/navbar';
+import Navbar from './components/Navbar';
 import CompanyDashboard from './pages/CompanyDashboard';
 import VendorDashboard from './pages/VendorDashboard';
 import Login from './pages/Login';
@@ -24,12 +24,51 @@ function App() {
     <Router>
       <Navbar />
       <Routes>
-        <Route path="/" element={token ? (role === 'company' ? <Navigate to="/company" /> : <Navigate to="/vendor" />) : <Login />} />
-        <Route path="/login" element={token ? (role === 'company' ? <Navigate to="/company" /> : <Navigate to="/vendor" />) : <Login />} />
-        <Route path="/register" element={token ? (role === 'company' ? <Navigate to="/company" /> : <Navigate to="/vendor" />) : <Register />} />
+        {/* If already logged in, redirect to dashboard from root/login/register */}
+        <Route
+          path="/"
+          element={
+            token ? (
+              role === 'company' ? <Navigate to="/company" /> : <Navigate to="/vendor" />
+            ) : (
+              <Login />
+            )
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            token ? (
+              role === 'company' ? <Navigate to="/company" /> : <Navigate to="/vendor" />
+            ) : (
+              <Login />
+            )
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            token ? (
+              role === 'company' ? <Navigate to="/company" /> : <Navigate to="/vendor" />
+            ) : (
+              <Register />
+            )
+          }
+        />
 
-        <Route path="/company" element={token && role === 'company' ? <CompanyDashboard /> : <Navigate to="/login" />} />
-        <Route path="/vendor" element={token && role === 'vendor' ? <VendorDashboard /> : <Navigate to="/login" />} />
+        {/* Protected Routes */}
+        <Route
+          path="/company"
+          element={
+            token && role === 'company' ? <CompanyDashboard /> : <Navigate to="/login" />
+          }
+        />
+        <Route
+          path="/vendor"
+          element={
+            token && role === 'vendor' ? <VendorDashboard /> : <Navigate to="/login" />
+          }
+        />
       </Routes>
     </Router>
   );
