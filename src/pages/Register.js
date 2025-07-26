@@ -17,20 +17,26 @@ function Register() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
+  e.preventDefault();
+  setError('');
 
-    try {
-      await axios.post('https://cabportal-backend.onrender.com/api/auth/register', form);
+  try {
+    const res = await axios.post('https://cabportal-backend.onrender.com/api/auth/register', form);
 
-      sessionStorage.setItem('tempEmail', form.email);
-      sessionStorage.setItem('tempPassword', form.password);
+    console.log('✅ Registration successful:', res.data);
 
-      navigate('/login');
-    } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed');
-    }
-  };
+    alert('✅ Registration successful! Redirecting to login...');
+    
+    sessionStorage.setItem('tempEmail', form.email);
+    sessionStorage.setItem('tempPassword', form.password);
+
+    setTimeout(() => navigate('/login'), 1000);  // Show alert for 1 sec
+  } catch (err) {
+    console.error('❌ Registration failed:', err.response?.data || err.message);
+    setError(err.response?.data?.message || 'Registration failed');
+  }
+};
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
