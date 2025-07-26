@@ -16,6 +16,8 @@ function Login() {
 
     if (tempEmail && tempPassword) {
       setForm({ email: tempEmail, password: tempPassword });
+      sessionStorage.removeItem('tempEmail');
+      sessionStorage.removeItem('tempPassword');
     }
   }, []);
 
@@ -35,9 +37,6 @@ function Login() {
       localStorage.setItem('userRole', user.role);
       window.dispatchEvent(new Event('storage'));
 
-      sessionStorage.removeItem('tempEmail');
-      sessionStorage.removeItem('tempPassword');
-
       if (user.role === 'company') {
         navigate('/company');
       } else if (user.role === 'vendor') {
@@ -46,7 +45,11 @@ function Login() {
         setError('Invalid user role');
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed. New user? Please register first.');
+      if (err.response && err.response.data && err.response.data.message) {
+        setError(err.response.data.message);
+      } else {
+        setError('Login failed. Please check your credentials.');
+      }
     }
   };
 
