@@ -11,7 +11,6 @@ function App() {
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [role, setRole] = useState(localStorage.getItem('userRole'));
 
-  // Watch for login/logout updates
   useEffect(() => {
     const syncAuth = () => {
       setToken(localStorage.getItem('token'));
@@ -24,34 +23,13 @@ function App() {
   return (
     <Router>
       <Navbar />
-
       <Routes>
-        {/* Public routes */}
-        <Route path="/" element={<Login />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/" element={token ? (role === 'company' ? <Navigate to="/company" /> : <Navigate to="/vendor" />) : <Login />} />
+        <Route path="/login" element={token ? (role === 'company' ? <Navigate to="/company" /> : <Navigate to="/vendor" />) : <Login />} />
+        <Route path="/register" element={token ? (role === 'company' ? <Navigate to="/company" /> : <Navigate to="/vendor" />) : <Register />} />
 
-        {/* Protected routes */}
-        <Route
-          path="/company"
-          element={
-            token && role === 'company' ? (
-              <CompanyDashboard />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
-        <Route
-          path="/vendor"
-          element={
-            token && role === 'vendor' ? (
-              <VendorDashboard />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
+        <Route path="/company" element={token && role === 'company' ? <CompanyDashboard /> : <Navigate to="/login" />} />
+        <Route path="/vendor" element={token && role === 'vendor' ? <VendorDashboard /> : <Navigate to="/login" />} />
       </Routes>
     </Router>
   );
