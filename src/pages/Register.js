@@ -17,26 +17,23 @@ function Register() {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setError('');
+    e.preventDefault();
+    setError('');
 
-  try {
-    const res = await axios.post('https://cabportal-backend.onrender.com/api/auth/register', form);
+    try {
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/register`, form);
+      const { token, user } = res.data;
 
-    console.log('✅ Registration successful:', res.data);
+      localStorage.setItem('token', token);
+      localStorage.setItem('userRole', user.role);
+      window.dispatchEvent(new Event('storage'));
 
-    alert('✅ Registration successful! Redirecting to login...');
-    
-    sessionStorage.setItem('tempEmail', form.email);
-    sessionStorage.setItem('tempPassword', form.password);
-
-    setTimeout(() => navigate('/login'), 1000);  // Show alert for 1 sec
-  } catch (err) {
-    console.error('❌ Registration failed:', err.response?.data || err.message);
-    setError(err.response?.data?.message || 'Registration failed');
-  }
-};
-
+      alert('✅ Registered and logged in successfully!');
+      navigate(user.role === 'company' ? '/company' : '/vendor');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Registration failed');
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
@@ -46,52 +43,15 @@ function Register() {
         {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="text"
-            name="name"
-            autoComplete="off"
-            placeholder="Full Name"
-            className="w-full px-4 py-2 border rounded-md"
-            value={form.name}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="email"
-            name="email"
-            autoComplete="off"
-            placeholder="Email"
-            className="w-full px-4 py-2 border rounded-md"
-            value={form.email}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="password"
-            name="password"
-            autoComplete="off"
-            placeholder="Password"
-            className="w-full px-4 py-2 border rounded-md"
-            value={form.password}
-            onChange={handleChange}
-            required
-          />
-          <select
-            name="role"
-            className="w-full px-4 py-2 border rounded-md"
-            value={form.role}
-            onChange={handleChange}
-          >
+          <input type="text" name="name" placeholder="Full Name" value={form.name} onChange={handleChange} required className="w-full px-4 py-2 border rounded-md" />
+          <input type="email" name="email" placeholder="Email" value={form.email} onChange={handleChange} required className="w-full px-4 py-2 border rounded-md" />
+          <input type="password" name="password" placeholder="Password" value={form.password} onChange={handleChange} required className="w-full px-4 py-2 border rounded-md" />
+          <select name="role" value={form.role} onChange={handleChange} className="w-full px-4 py-2 border rounded-md">
             <option value="company">Company</option>
             <option value="vendor">Vendor</option>
           </select>
 
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
-          >
-            Register
-          </button>
+          <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition">Register</button>
         </form>
       </div>
     </div>
