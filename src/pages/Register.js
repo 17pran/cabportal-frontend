@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 function Register() {
   const [form, setForm] = useState({ email: '', password: '', role: 'company' });
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false); // ← loading state
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -14,6 +15,7 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setLoading(true); // ← start loading
     try {
       const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/register`, form);
       const { token, user } = res.data;
@@ -23,9 +25,17 @@ function Register() {
       localStorage.setItem('userEmail', user.email);
       window.dispatchEvent(new Event('storage'));
 
-window.location.href = user.role === "company" ? "/company" : "/vendor";
+      // Optional success alert
+      alert("Registration successful! Redirecting...");
+
+      // Delay before redirect
+      setTimeout(() => {
+        window.location.href = user.role === "company" ? "/company" : "/vendor";
+      }, 1000); // 1 second
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed');
+    } finally {
+      setLoading(false); // ← stop loading
     }
   };
 
@@ -35,13 +45,41 @@ window.location.href = user.role === "company" ? "/company" : "/vendor";
         <h2 className="text-2xl font-bold text-blue-700 mb-6 text-center">Register</h2>
         {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
         <form onSubmit={handleSubmit} className="space-y-4">
-          <input type="email" name="email" placeholder="Email" value={form.email} onChange={handleChange} required className="w-full px-4 py-2 border rounded-md" />
-          <input type="password" name="password" placeholder="Password" value={form.password} onChange={handleChange} required className="w-full px-4 py-2 border rounded-md" />
-          <select name="role" value={form.role} onChange={handleChange} required className="w-full px-4 py-2 border rounded-md">
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={form.email}
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-2 border rounded-md"
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={form.password}
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-2 border rounded-md"
+          />
+          <select
+            name="role"
+            value={form.role}
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-2 border rounded-md"
+          >
             <option value="company">Company</option>
             <option value="vendor">Vendor</option>
           </select>
-          <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition">Register</button>
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
+          >
+            {loading ? 'Registering...' : 'Register'}
+          </button>
         </form>
       </div>
     </div>
