@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 function Register() {
@@ -14,24 +13,21 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
     setLoading(true);
-    try {
-      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/register`, form);
-      const { token, user } = res.data;
+    setError('');
 
-      localStorage.setItem('token', token);
-      localStorage.setItem('userRole', user.role);
-      localStorage.setItem('userEmail', user.email);
-      window.dispatchEvent(new Event('storage'));
+    // 🎯 Demo Mode: skip backend registration entirely
+    const token = 'demo-token';
+    localStorage.setItem('token', token);
+    localStorage.setItem('userRole', form.role);
+    localStorage.setItem('userEmail', form.email);
 
-      alert("Registration successful!");
-      navigate(user.role === "company" ? "/company" : "/vendor");
-    } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed');
-    } finally {
-      setLoading(false);
-    }
+    alert('Registration successful!'); // Optional UI feedback
+
+    // 🚀 Redirect to dashboard based on selected role
+    navigate(form.role === 'company' ? '/company-dashboard' : '/vendor-dashboard');
+
+    setLoading(false);
   };
 
   return (
