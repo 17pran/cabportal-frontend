@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import Navbar from '../components/Navbar'; // adjust path if needed
+import Navbar from '../components/navbar'; 
 
 function Register() {
   const [form, setForm] = useState({ email: '', password: '', role: 'company' });

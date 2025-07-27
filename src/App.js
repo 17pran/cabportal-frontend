@@ -1,7 +1,7 @@
 // src/App.js
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import Navbar from './components/Navbar';
+import Navbar from './components/navbar';
 import CompanyDashboard from './pages/CompanyDashboard';
 import VendorDashboard from './pages/VendorDashboard';
 import Login from './pages/Login';
