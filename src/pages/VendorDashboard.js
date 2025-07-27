@@ -48,6 +48,9 @@ function VendorDashboard() {
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       <h1 className="text-3xl font-bold text-blue-800 mb-6 text-center">Vendor Dashboard</h1>
+<p className="text-center text-gray-500 mb-6">
+  Welcome, {localStorage.getItem('userName') || 'Vendor User'}
+</p>
 
       {bookings.length === 0 ? (
         <p className="text-center text-gray-600">No bookings available.</p>

@@ -72,7 +72,9 @@ function CompanyDashboard() {
     <div className="min-h-screen bg-gray-100 p-6">
       <header className="bg-white rounded-xl shadow-md px-6 py-4 mb-6 flex justify-between items-center">
         <h1 className="text-2xl font-bold text-blue-700">Company Dashboard</h1>
-        <span className="text-gray-500">Welcome, Company User</span>
+<span className="text-gray-500">
+  Welcome, {localStorage.getItem('userName') || 'Company User'}
+</span>
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
