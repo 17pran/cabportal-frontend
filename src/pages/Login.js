@@ -16,7 +16,7 @@ function Login() {
     e.preventDefault();
     setError('');
     try {
-      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/register`, form);
+const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/login`, form);
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('role', res.data.user.role);
       if (res.data.user.role === 'company') {
