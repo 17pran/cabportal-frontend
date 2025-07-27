@@ -24,12 +24,15 @@ function Login() {
         navigate('/vendor-dashboard');
       }
     } catch (err) {
-      if (err.response && err.response.data.message === 'User not found') {
-        setError('User not found. Please register first.');
-      } else {
-        setError(err.response?.data?.message || 'Login failed');
-      }
-    }
+  const message = err.response?.data?.message;
+  if (message === 'User not found') {
+    setError('User not found. Please register first.');
+  } else if (message === 'Invalid credentials') {
+    setError('Wrong password. Please try again.');
+  } else {
+    setError('Login failed. Please try again.');
+  }
+}
   };
 
   return (
@@ -55,6 +58,7 @@ function Login() {
           className="w-full mb-4 px-3 py-2 border rounded"
         />
         {error && <p className="text-red-600 mb-2">{error}</p>}
+        {success && <p className="text-green-600 mb-2">{success}</p>}
         <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
           Login
         </button>
