@@ -59,11 +59,11 @@ function Login() {
           Login
         </button>
         <p className="mt-4 text-sm text-center">
-          New user?{' '}
-          <Link to="/register" className="text-blue-600 hover:underline">
-            Register here
-          </Link>
-        </p>
+  New user?{' '}
+  <Link to="/register" className="text-blue-600 hover:underline">
+    Register here
+  </Link>
+</p>
       </form>
     </div>
   );
