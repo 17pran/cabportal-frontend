@@ -10,18 +10,17 @@ function VendorDashboard() {
   const [assignModalData, setAssignModalData] = useState(null);
 
   const token = localStorage.getItem('token');
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const fetchBookings = useCallback(async () => {
     try {
-      const res = await axios.get(`${backendUrl}/api/bookings`, {
+      const res = await axios.get(`http://localhost:5000/api/bookings`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setBookings(res.data);
     } catch (err) {
       console.error('Failed to fetch bookings:', err.response?.data || err.message);
     }
-  }, [backendUrl, token]);
+  }, [token]);
 
   useEffect(() => {
     fetchBookings();
@@ -30,7 +29,7 @@ function VendorDashboard() {
   const updateBookingStatus = async (id, newStatus) => {
     try {
       await axios.put(
-        `${backendUrl}/api/bookings/${id}/status`,
+        `http://localhost:5000/api/bookings/${id}/status`,
         { status: newStatus },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -48,9 +47,9 @@ function VendorDashboard() {
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       <h1 className="text-3xl font-bold text-blue-800 mb-6 text-center">Vendor Dashboard</h1>
-<p className="text-center text-gray-500 mb-6">
-  Welcome, {localStorage.getItem('userName') || 'Vendor User'}
-</p>
+      <p className="text-center text-gray-500 mb-6">
+        Welcome, {localStorage.getItem('userName') || 'Vendor User'}
+      </p>
 
       {bookings.length === 0 ? (
         <p className="text-center text-gray-600">No bookings available.</p>

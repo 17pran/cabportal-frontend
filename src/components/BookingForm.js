@@ -34,7 +34,6 @@ function BookingForm() {
 
     try {
       const token = localStorage.getItem('token');
-await axios.post('https://cabportal-backend.onrender.com/api/bookings', payload);
 
       const res = await axios.post('http://localhost:5000/api/bookings', payload, {
         headers: {
@@ -50,7 +49,6 @@ await axios.post('https://cabportal-backend.onrender.com/api/bookings', payload)
     }
   };
 
-  // ⏳ Helper functions for datetime constraints
   const getMinDateTime = () => {
     const now = new Date();
     now.setSeconds(0, 0);
@@ -78,7 +76,6 @@ await axios.post('https://cabportal-backend.onrender.com/api/bookings', payload)
       <input type="text" name="pickup" value={form.pickup} onChange={handleChange} placeholder="Pickup Location" className="w-full px-3 py-2 border rounded-md" required />
       <input type="text" name="dropoff" value={form.dropoff} onChange={handleChange} placeholder="Drop Location" className="w-full px-3 py-2 border rounded-md" required />
 
-      {/* ✅ Date-time with constraints */}
       <input
         type="datetime-local"
         name="datetime"

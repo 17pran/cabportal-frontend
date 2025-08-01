@@ -19,17 +19,16 @@ function CompanyDashboard() {
 
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     if (!token) {
-      navigate('/register'); // Redirect immediately if not authenticated
+      navigate('/register');
       return;
     }
 
     const fetchBookings = async () => {
       try {
-        const res = await axios.get(`${BACKEND_URL}/api/bookings`, {
+        const res = await axios.get('http://localhost:5000/api/bookings', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setBookings(res.data);
@@ -39,12 +38,12 @@ function CompanyDashboard() {
     };
 
     fetchBookings();
-  }, [token, BACKEND_URL, navigate]);
+  }, [token, navigate]);
 
   const updateBookingStatus = async (id, newStatus) => {
     try {
       await axios.put(
-        `${BACKEND_URL}/api/bookings/${id}/status`,
+        `http://localhost:5000/api/bookings/${id}/status`,
         { status: newStatus },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -72,9 +71,9 @@ function CompanyDashboard() {
     <div className="min-h-screen bg-gray-100 p-6">
       <header className="bg-white rounded-xl shadow-md px-6 py-4 mb-6 flex justify-between items-center">
         <h1 className="text-2xl font-bold text-blue-700">Company Dashboard</h1>
-<span className="text-gray-500">
-  Welcome, {localStorage.getItem('userName') || 'Company User'}
-</span>
+        <span className="text-gray-500">
+          Welcome, {localStorage.getItem('userName') || 'Company User'}
+        </span>
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
@@ -129,13 +128,17 @@ function CompanyDashboard() {
         {filteredBookings.length > 0 ? (
           filteredBookings.map((booking) => (
             <div key={booking._id} className="bg-white rounded-xl p-4 shadow-md">
-              <h3 className="text-lg font-semibold text-blue-700">Booking #{booking._id.slice(-5)}</h3>
+              <h3 className="text-lg font-semibold text-blue-700">
+                Booking #{booking._id.slice(-5)}
+              </h3>
               <p className="text-sm text-gray-600">Guest: {booking.guestName}</p>
               <p className="text-sm text-gray-600">Trip Type: {booking.tripType}</p>
               <p className="text-sm text-gray-600">Vehicle: {booking.vehicle}</p>
               <p className="text-sm text-gray-600">Vendor: {booking.vendor}</p>
               <p className="text-sm text-gray-600">Status: {booking.status}</p>
-              <p className="text-sm text-gray-500">Date: {new Date(booking.datetime).toLocaleString()}</p>
+              <p className="text-sm text-gray-500">
+                Date: {new Date(booking.datetime).toLocaleString()}
+              </p>
 
               <div className="mt-3 flex flex-wrap gap-2">
                 <button

@@ -1,5 +1,7 @@
+// src/pages/Register.jsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function Register() {
   const [form, setForm] = useState({
@@ -11,7 +13,6 @@ function Register() {
 
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [showDashboardLink, setShowDashboardLink] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -24,24 +25,22 @@ function Register() {
     setLoading(true);
 
     try {
-      const token = 'demo-token';
+      const res = await axios.post('http://localhost:5000/api/auth/register', form);
+      const { token, user } = res.data;
+
       localStorage.setItem('token', token);
-      localStorage.setItem('userRole', form.role);
-      localStorage.setItem('userEmail', form.email);
-      localStorage.setItem('userName', form.name);
+      localStorage.setItem('userRole', user.role);
+      localStorage.setItem('userEmail', user.email);
+      localStorage.setItem('userName', user.name);
 
       window.dispatchEvent(new Event('storage'));
-      alert('Registration successful!');
-      setShowDashboardLink(true);
+      navigate(user.role === 'company' ? '/company' : '/vendor');
     } catch (err) {
-      setError('Registration failed');
+      const msg = err.response?.data?.message || 'Registration failed. Please try again.';
+      setError(msg);
     } finally {
       setLoading(false);
     }
-  };
-
-  const goToDashboard = () => {
-    navigate(form.role === 'company' ? '/company' : '/vendor');
   };
 
   return (
@@ -95,18 +94,6 @@ function Register() {
             {loading ? 'Registering...' : 'Register'}
           </button>
         </form>
-
-        {/* 🔗 Show dashboard button once registered */}
-        {showDashboardLink && (
-          <div className="mt-6 text-center">
-            <button
-              onClick={goToDashboard}
-              className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 transition"
-            >
-              Go to {form.role === 'company' ? 'Company' : 'Vendor'} Dashboard
-            </button>
-          </div>
-        )}
       </div>
     </div>
   );
